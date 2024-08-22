@@ -1,5 +1,5 @@
 const gameBoard = (function () {
-  const gameBoardArray = ["a1", "a2", "a3", "b1", "b2", "b3", "c1", "c2", "c3"];
+  let gameBoardArray = ["a1", "a2", "a3", "b1", "b2", "b3", "c1", "c2", "c3"];
   const checkScoreRowOne = ["a1", "a2", "a3"];
   const checkScoreRowTwo = ["b1", "b2", "b3"];
   const checkScoreRowThree = ["c1", "c2", "c3"];
@@ -8,8 +8,8 @@ const gameBoard = (function () {
   const checkScoreColumnThree = ["a3", "b3", "c3"];
   const checkScoreAcrossOne = ["a1", "b2", "c3"];
   const checkScoreAcrossTwo = ["c1", "b2", "a3"];
-  const x = [];
-  const o = [];
+  let x = [];
+  let o = [];
   const oSelect = (choice) => {
     o.push(choice);
     const index = gameBoardArray.indexOf(choice);
@@ -56,6 +56,11 @@ const gameBoard = (function () {
       return false;
     }
   };
+
+  let xAndOReset = () => {
+    x = [];
+    o = [];
+  };
   return {
     gameBoardArray,
     x,
@@ -64,53 +69,102 @@ const gameBoard = (function () {
     xSelect,
     xWin,
     oWin,
+    xAndOReset,
   };
 })();
 
 const turns = (function () {
-  let falseXChoice = true;
-  const xTurn = () => {
-    let selection = prompt("What does X want to chose?");
-    if (gameBoard.gameBoardArray.indexOf(selection) !== -1) {
-      gameBoard.xSelect(selection);
-      console.log("X chose" + selection);
-      falseXChoice = false;
-    } else {
-      console.log("Invalid x option");
-      falseXChoice = true;
+  // let falseXChoice = true;
+  let isXActive = true;
+  // const xTurn = () => {
+  //   let selection = prompt("What does X want to chose?");
+  //   if (gameBoard.gameBoardArray.indexOf(selection) !== -1) {
+  //     gameBoard.xSelect(selection);
+  //     console.log("X chose" + selection);
+  //     falseXChoice = false;
+  //   } else {
+  //     console.log("Invalid x option");
+  //     falseXChoice = true;
+  //   }
+  // };
+
+  const resetForm = (buttonsToRestart) => {
+    for (let button in buttonsToRestart) {
+      buttonsToRestart[button].textContent = "";
+      buttonsToRestart[button].disabled = false;
     }
+    gameBoard.xAndOReset();
+    isXActive = true;
   };
 
-  let falseOChoice = true;
-  const oTurn = () => {
-    let selection = prompt("What does O want to chose?");
-    if (gameBoard.gameBoardArray.indexOf(selection) !== -1) {
-      gameBoard.oSelect(selection);
-      console.log("O chose" + selection);
-      falseOChoice = false;
-    } else {
-      console.log("Invalid option");
-      falseOChoice = true;
-    }
+  const makeButtonX = (buttonId) => {
+    const button = document.querySelector(`#${buttonId}`);
+    button.textContent = "X";
+    gameBoard.xSelect(buttonId);
+    button.disabled = true;
+    isXActive = false;
+    console.log(gameBoard.x);
   };
 
-  const playRound = () => {
-    do {
-      oTurn();
-      if (gameBoard.oWin() === true) {
-        console.log("O is the winner!");
-        return;
+  const makeButtonO = (buttonId) => {
+    const button = document.querySelector(`#${buttonId}`);
+    button.textContent = "O";
+    gameBoard.oSelect(buttonId);
+    button.disabled = true;
+    isXActive = true;
+    console.log(gameBoard.o);
+  };
+
+  const selectButtons = document.querySelectorAll(".select-button");
+
+  for (let button in selectButtons) {
+    selectButtons[button].onclick = function () {
+      let buttonId = this.id;
+      if (isXActive === true) {
+        makeButtonX(buttonId);
+      } else if (isXActive === false) {
+        makeButtonO(buttonId);
       }
-    } while (falseOChoice === true);
-    do {
-      xTurn();
       if (gameBoard.xWin() === true) {
-        console.log("X is the winner");
-        return;
+        alert("X won the game!");
+        resetForm(selectButtons);
+      } else if (gameBoard.oWin()) {
+        alert("O won the game!");
+        resetForm(selectButtons);
       }
-    } while (falseXChoice === true);
-  };
-  return { playRound };
+    };
+  }
+
+  // let falseOChoice = true;
+  // const oTurn = () => {
+  //   let selection = prompt("What does O want to chose?");
+  //   if (gameBoard.gameBoardArray.indexOf(selection) !== -1) {
+  //     gameBoard.oSelect(selection);
+  //     console.log("O chose" + selection);
+  //     falseOChoice = false;
+  //   } else {
+  //     console.log("Invalid option");
+  //     falseOChoice = true;
+  //   }
+  // };
+
+  // const playRound = () => {
+  //   do {
+  //     oTurn();
+  //     if (gameBoard.oWin() === true) {
+  //       console.log("O is the winner!");
+  //       return;
+  //     }
+  //   } while (falseOChoice === true);
+  //   do {
+  //     xTurn();
+  //     if (gameBoard.xWin() === true) {
+  //       console.log("X is the winner");
+  //       return;
+  //     }
+  //   } while (falseXChoice === true);
+  // };
+  // return { playRound };
 })();
 
 const playGame = () => {
