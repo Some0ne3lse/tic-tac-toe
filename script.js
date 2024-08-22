@@ -10,20 +10,29 @@ const gameBoard = (function () {
   const checkScoreAcrossTwo = ["c1", "b2", "a3"];
   let x = [];
   let o = [];
-  const oSelect = (choice) => {
-    o.push(choice);
+
+  function makeSelection(choice, array) {
+    array.push(choice);
     const index = gameBoardArray.indexOf(choice);
     if (index > -1) {
       gameBoardArray.splice(index, 1);
     }
-  };
-  const xSelect = (choice) => {
-    x.push(choice);
-    const index = gameBoardArray.indexOf(choice);
-    if (index > -1) {
-      gameBoardArray.splice(index, 1);
-    }
-  };
+  }
+
+  // const oSelect = (choice) => {
+  //   o.push(choice);
+  //   const index = gameBoardArray.indexOf(choice);
+  //   if (index > -1) {
+  //     gameBoardArray.splice(index, 1);
+  //   }
+  // };
+  // const xSelect = (choice) => {
+  //   x.push(choice);
+  //   const index = gameBoardArray.indexOf(choice);
+  //   if (index > -1) {
+  //     gameBoardArray.splice(index, 1);
+  //   }
+  // };
   const xWin = () => {
     if (
       checkScoreRowOne.every((row) => x.includes(row)) ||
@@ -65,11 +74,10 @@ const gameBoard = (function () {
     gameBoardArray,
     x,
     o,
-    oSelect,
-    xSelect,
     xWin,
     oWin,
     xAndOReset,
+    makeSelection,
   };
 })();
 
@@ -97,23 +105,33 @@ const turns = (function () {
     isXActive = true;
   };
 
-  const makeButtonX = (buttonId) => {
+  function buttonPress(buttonId, array, name) {
     const button = document.querySelector(`#${buttonId}`);
-    button.textContent = "X";
-    gameBoard.xSelect(buttonId);
+    button.textContent = name;
+    gameBoard.makeSelection(buttonId, array);
     button.disabled = true;
-    isXActive = false;
-    console.log(gameBoard.x);
-  };
+    isXActive = !isXActive;
+  }
 
-  const makeButtonO = (buttonId) => {
-    const button = document.querySelector(`#${buttonId}`);
-    button.textContent = "O";
-    gameBoard.oSelect(buttonId);
-    button.disabled = true;
-    isXActive = true;
-    console.log(gameBoard.o);
-  };
+  // const makeButtonX = (buttonId) => {
+  //   const button = document.querySelector(`#${buttonId}`);
+  //   button.textContent = "X";
+  //   gameBoard.makeSelection(buttonId, gameBoard.x);
+  //   // gameBoard.xSelect(buttonId);
+  //   button.disabled = true;
+  //   isXActive = false;
+  //   console.log(gameBoard.x);
+  // };
+
+  // const makeButtonO = (buttonId) => {
+  //   const button = document.querySelector(`#${buttonId}`);
+  //   button.textContent = "O";
+  //   gameBoard.makeSelection(buttonId, gameBoard.o);
+  //   // gameBoard.oSelect(buttonId);
+  //   button.disabled = true;
+  //   isXActive = true;
+  //   console.log(gameBoard.o);
+  // };
 
   const selectButtons = document.querySelectorAll(".select-button");
 
@@ -121,9 +139,9 @@ const turns = (function () {
     selectButtons[button].onclick = function () {
       let buttonId = this.id;
       if (isXActive === true) {
-        makeButtonX(buttonId);
+        buttonPress(buttonId, gameBoard.x, "X");
       } else if (isXActive === false) {
-        makeButtonO(buttonId);
+        buttonPress(buttonId, gameBoard.o, "O");
       }
       if (gameBoard.xWin() === true) {
         alert("X won the game!");
@@ -167,8 +185,8 @@ const turns = (function () {
   // return { playRound };
 })();
 
-const playGame = () => {
-  while (gameBoard.oWin() === false && gameBoard.xWin() === false) {
-    turns.playRound();
-  }
-};
+// const playGame = () => {
+//   while (gameBoard.oWin() === false && gameBoard.xWin() === false) {
+//     turns.playRound();
+//   }
+// };
