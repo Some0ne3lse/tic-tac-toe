@@ -1,6 +1,7 @@
 body {
   min-height: 100vh;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
@@ -11,4 +12,13 @@ body {
   grid-template-rows: repeat(3, 1fr);
   width: 40rem;
   height: 40rem;
+}
+
+.winner-div {
+  height: 5rem;
+  font-size: 3rem;
+}
+
+.select-button {
+  font-size: 3rem;
 }

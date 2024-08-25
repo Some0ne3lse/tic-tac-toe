@@ -1,3 +1,12 @@
+const selectPlayer = (function () {
+  const formItself = document.querySelector("#nameForm");
+  formItself.addEventListener("submit", (event) => {
+    event.preventDefault();
+    gameBoard.playerOne = document.querySelector("#playerOne").value;
+    gameBoard.playerTwo = document.querySelector("#playerTwo").value;
+  });
+})();
+
 const gameBoard = (function () {
   let gameBoardArray = ["a1", "a2", "a3", "b1", "b2", "b3", "c1", "c2", "c3"];
   const checkScoreRowOne = ["a1", "a2", "a3"];
@@ -8,8 +17,10 @@ const gameBoard = (function () {
   const checkScoreColumnThree = ["a3", "b3", "c3"];
   const checkScoreAcrossOne = ["a1", "b2", "c3"];
   const checkScoreAcrossTwo = ["c1", "b2", "a3"];
-  let x = [];
-  let o = [];
+  let xChoices = [];
+  let oChoices = [];
+  let playerOne = "X";
+  let playerTwo = "O";
 
   function makeSelection(choice, array) {
     array.push(choice);
@@ -19,46 +30,32 @@ const gameBoard = (function () {
     }
   }
 
-  // const oSelect = (choice) => {
-  //   o.push(choice);
-  //   const index = gameBoardArray.indexOf(choice);
-  //   if (index > -1) {
-  //     gameBoardArray.splice(index, 1);
-  //   }
-  // };
-  // const xSelect = (choice) => {
-  //   x.push(choice);
-  //   const index = gameBoardArray.indexOf(choice);
-  //   if (index > -1) {
-  //     gameBoardArray.splice(index, 1);
-  //   }
-  // };
-  const xWin = () => {
+  let xWin = () => {
     if (
-      checkScoreRowOne.every((row) => x.includes(row)) ||
-      checkScoreRowTwo.every((row) => x.includes(row)) ||
-      checkScoreRowThree.every((row) => x.includes(row)) ||
-      checkScoreColumnOne.every((row) => x.includes(row)) ||
-      checkScoreColumnTwo.every((row) => x.includes(row)) ||
-      checkScoreColumnThree.every((row) => x.includes(row)) ||
-      checkScoreAcrossOne.every((row) => x.includes(row)) ||
-      checkScoreAcrossTwo.every((row) => x.includes(row))
+      checkScoreRowOne.every((row) => xChoices.includes(row)) ||
+      checkScoreRowTwo.every((row) => xChoices.includes(row)) ||
+      checkScoreRowThree.every((row) => xChoices.includes(row)) ||
+      checkScoreColumnOne.every((row) => xChoices.includes(row)) ||
+      checkScoreColumnTwo.every((row) => xChoices.includes(row)) ||
+      checkScoreColumnThree.every((row) => xChoices.includes(row)) ||
+      checkScoreAcrossOne.every((row) => xChoices.includes(row)) ||
+      checkScoreAcrossTwo.every((row) => xChoices.includes(row))
     ) {
       return true;
     } else {
       return false;
     }
   };
-  const oWin = () => {
+  let oWin = () => {
     if (
-      checkScoreRowOne.every((row) => o.includes(row)) ||
-      checkScoreRowTwo.every((row) => o.includes(row)) ||
-      checkScoreRowThree.every((row) => o.includes(row)) ||
-      checkScoreColumnOne.every((row) => o.includes(row)) ||
-      checkScoreColumnTwo.every((row) => o.includes(row)) ||
-      checkScoreColumnThree.every((row) => o.includes(row)) ||
-      checkScoreAcrossOne.every((row) => o.includes(row)) ||
-      checkScoreAcrossTwo.every((row) => o.includes(row))
+      checkScoreRowOne.every((row) => oChoices.includes(row)) ||
+      checkScoreRowTwo.every((row) => oChoices.includes(row)) ||
+      checkScoreRowThree.every((row) => oChoices.includes(row)) ||
+      checkScoreColumnOne.every((row) => oChoices.includes(row)) ||
+      checkScoreColumnTwo.every((row) => oChoices.includes(row)) ||
+      checkScoreColumnThree.every((row) => oChoices.includes(row)) ||
+      checkScoreAcrossOne.every((row) => oChoices.includes(row)) ||
+      checkScoreAcrossTwo.every((row) => oChoices.includes(row))
     ) {
       return true;
     } else {
@@ -67,41 +64,27 @@ const gameBoard = (function () {
   };
 
   let xAndOReset = () => {
-    x = [];
-    o = [];
+    oChoices.length = 0;
+    xChoices.length = 0;
+    gameBoardArray = ["a1", "a2", "a3", "b1", "b2", "b3", "c1", "c2", "c3"];
   };
+
   return {
     gameBoardArray,
-    x,
-    o,
+    oChoices,
+    xChoices,
     xWin,
     oWin,
     xAndOReset,
     makeSelection,
+    playerOne,
+    playerTwo,
   };
 })();
 
 const turns = (function () {
-  // let falseXChoice = true;
   let isXActive = true;
-  // const xTurn = () => {
-  //   let selection = prompt("What does X want to chose?");
-  //   if (gameBoard.gameBoardArray.indexOf(selection) !== -1) {
-  //     gameBoard.xSelect(selection);
-  //     console.log("X chose" + selection);
-  //     falseXChoice = false;
-  //   } else {
-  //     console.log("Invalid x option");
-  //     falseXChoice = true;
-  //   }
-  // };
-
-  const resetForm = (buttonsToRestart) => {
-    for (let button in buttonsToRestart) {
-      buttonsToRestart[button].textContent = "";
-      buttonsToRestart[button].disabled = false;
-    }
-    gameBoard.xAndOReset();
+  const changeIsXActive = () => {
     isXActive = true;
   };
 
@@ -113,80 +96,52 @@ const turns = (function () {
     isXActive = !isXActive;
   }
 
-  // const makeButtonX = (buttonId) => {
-  //   const button = document.querySelector(`#${buttonId}`);
-  //   button.textContent = "X";
-  //   gameBoard.makeSelection(buttonId, gameBoard.x);
-  //   // gameBoard.xSelect(buttonId);
-  //   button.disabled = true;
-  //   isXActive = false;
-  //   console.log(gameBoard.x);
-  // };
-
-  // const makeButtonO = (buttonId) => {
-  //   const button = document.querySelector(`#${buttonId}`);
-  //   button.textContent = "O";
-  //   gameBoard.makeSelection(buttonId, gameBoard.o);
-  //   // gameBoard.oSelect(buttonId);
-  //   button.disabled = true;
-  //   isXActive = true;
-  //   console.log(gameBoard.o);
-  // };
+  const winnerText = document.querySelector("#winnerText");
 
   const selectButtons = document.querySelectorAll(".select-button");
+
+  function disableAllButtons(buttons) {
+    buttons.forEach((elem) => {
+      elem.disabled = true;
+    });
+  }
 
   for (let button in selectButtons) {
     selectButtons[button].onclick = function () {
       let buttonId = this.id;
       if (isXActive === true) {
-        buttonPress(buttonId, gameBoard.x, "X");
+        buttonPress(buttonId, gameBoard.xChoices, "X");
+        console.log(gameBoard.xChoices);
       } else if (isXActive === false) {
-        buttonPress(buttonId, gameBoard.o, "O");
+        buttonPress(buttonId, gameBoard.oChoices, "O");
+        console.log(gameBoard.oChoices);
       }
       if (gameBoard.xWin() === true) {
-        alert("X won the game!");
-        resetForm(selectButtons);
-      } else if (gameBoard.oWin()) {
-        alert("O won the game!");
-        resetForm(selectButtons);
+        winnerText.textContent = `${gameBoard.playerOne} won the game!`;
+        disableAllButtons(selectButtons);
+      } else if (gameBoard.oWin() === true) {
+        winnerText.textContent = `${gameBoard.playerTwo} won the game!`;
+        disableAllButtons(selectButtons);
       }
     };
   }
 
-  // let falseOChoice = true;
-  // const oTurn = () => {
-  //   let selection = prompt("What does O want to chose?");
-  //   if (gameBoard.gameBoardArray.indexOf(selection) !== -1) {
-  //     gameBoard.oSelect(selection);
-  //     console.log("O chose" + selection);
-  //     falseOChoice = false;
-  //   } else {
-  //     console.log("Invalid option");
-  //     falseOChoice = true;
-  //   }
-  // };
-
-  // const playRound = () => {
-  //   do {
-  //     oTurn();
-  //     if (gameBoard.oWin() === true) {
-  //       console.log("O is the winner!");
-  //       return;
-  //     }
-  //   } while (falseOChoice === true);
-  //   do {
-  //     xTurn();
-  //     if (gameBoard.xWin() === true) {
-  //       console.log("X is the winner");
-  //       return;
-  //     }
-  //   } while (falseXChoice === true);
-  // };
-  // return { playRound };
+  return { selectButtons, changeIsXActive, winnerText };
 })();
 
-// const playGame = () => {
-//   while (gameBoard.oWin() === false && gameBoard.xWin() === false) {
-//     turns.playRound();
-//   }
-// };
+const buttonActions = (function () {
+  const resetForm = (buttonsToRestart) => {
+    for (let button in buttonsToRestart) {
+      buttonsToRestart[button].textContent = "";
+      buttonsToRestart[button].disabled = false;
+    }
+    turns.winnerText.textContent = "";
+    gameBoard.xAndOReset();
+    turns.changeIsXActive();
+  };
+
+  const restartButton = document.querySelector("#restartButton");
+  restartButton.onclick = function () {
+    resetForm(turns.selectButtons);
+  };
+})();
