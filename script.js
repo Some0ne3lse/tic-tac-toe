@@ -4,6 +4,11 @@ const selectPlayer = (function () {
     event.preventDefault();
     gameBoard.playerOne = document.querySelector("#playerOne").value;
     gameBoard.playerTwo = document.querySelector("#playerTwo").value;
+    gameBoard.playerXName.textContent =
+      document.querySelector("#playerOne").value;
+    gameBoard.playerOName.textContent =
+      document.querySelector("#playerTwo").value;
+    formItself.reset();
   });
 })();
 
@@ -69,6 +74,11 @@ const gameBoard = (function () {
     gameBoardArray = ["a1", "a2", "a3", "b1", "b2", "b3", "c1", "c2", "c3"];
   };
 
+  const playerXName = document.querySelector("#playerX");
+  const playerOName = document.querySelector("#playerO");
+  playerXName.textContent = playerOne;
+  playerOName.textContent = playerTwo;
+
   return {
     gameBoardArray,
     oChoices,
@@ -79,6 +89,8 @@ const gameBoard = (function () {
     makeSelection,
     playerOne,
     playerTwo,
+    playerXName,
+    playerOName,
   };
 })();
 
