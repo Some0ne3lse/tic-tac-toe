@@ -26,6 +26,7 @@ const gameBoard = (function () {
   let oChoices = [];
   let playerOne = "X";
   let playerTwo = "O";
+  let scoreboard = [];
 
   function makeSelection(choice, array) {
     array.push(choice);
@@ -79,6 +80,21 @@ const gameBoard = (function () {
   playerXName.textContent = playerOne;
   playerOName.textContent = playerTwo;
 
+  const updateScoreboard = () => {
+    const scoreboardDiv = document.querySelector("#scoreboard");
+
+    if (scoreboard.length !== 0) {
+      scoreboardDiv.replaceChildren();
+    }
+
+    for (const winner of scoreboard) {
+      const theWinner = document.createElement("p");
+      theWinner.classList.add("the-winner");
+      theWinner.textContent = winner;
+      scoreboardDiv.appendChild(theWinner);
+    }
+  };
+
   return {
     gameBoardArray,
     oChoices,
@@ -91,6 +107,8 @@ const gameBoard = (function () {
     playerTwo,
     playerXName,
     playerOName,
+    scoreboard,
+    updateScoreboard,
   };
 })();
 
@@ -130,9 +148,13 @@ const turns = (function () {
       }
       if (gameBoard.xWin() === true) {
         winnerText.textContent = `${gameBoard.playerOne} won the game!`;
+        gameBoard.scoreboard.push(gameBoard.playerOne);
+        gameBoard.updateScoreboard();
         disableAllButtons(selectButtons);
       } else if (gameBoard.oWin() === true) {
         winnerText.textContent = `${gameBoard.playerTwo} won the game!`;
+        gameBoard.scoreboard.push(gameBoard.playerTwo);
+        gameBoard.updateScoreboard();
         disableAllButtons(selectButtons);
       }
       if (gameBoard.gameBoardArray.length === 0) {
