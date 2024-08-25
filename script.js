@@ -123,6 +123,9 @@ const turns = (function () {
         winnerText.textContent = `${gameBoard.playerTwo} won the game!`;
         disableAllButtons(selectButtons);
       }
+      if (gameBoard.gameBoardArray.length === 0) {
+        winnerText.textContent = "It's a draw!";
+      }
     };
   }
 
