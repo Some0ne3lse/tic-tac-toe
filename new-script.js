@@ -12,11 +12,14 @@ const gameBoard = (function () {
   playerXName.textContent = playerOne;
   playerOName.textContent = playerTwo;
 
+  const getPlayerOne = () => playerOne;
+  const getPlayerTwo = () => playerTwo;
+
   const formItself = document.querySelector("#nameForm");
   formItself.addEventListener("submit", (event) => {
     event.preventDefault();
-    playerOne = document.querySelector("#playerOne").value;
-    playerTwo = document.querySelector("#playerTwo").value;
+    playerOne = document.querySelector("#playerOneForm").value;
+    playerTwo = document.querySelector("#playerTwoForm").value;
     playerXName.textContent = playerOne;
     playerOName.textContent = playerTwo;
     formItself.reset();
@@ -37,15 +40,31 @@ const gameBoard = (function () {
     gameBoardArray.push(...initialArray);
   };
 
+  const updateScoreboard = () => {
+    const scoreboardDiv = document.querySelector("#scoreboard");
+
+    if (scoreboard.length !== 0) {
+      scoreboardDiv.replaceChildren();
+    }
+
+    for (const winner of scoreboard) {
+      const theWinner = document.createElement("p");
+      theWinner.classList.add("the-winner");
+      theWinner.textContent = winner;
+      scoreboardDiv.appendChild(theWinner);
+    }
+  };
+
   return {
     gameBoardArray,
     xChoices,
     oChoices,
-    playerOne,
-    playerTwo,
+    getPlayerOne,
+    getPlayerTwo,
     scoreboard,
     makeSelection,
     resetGameBoardArray,
+    updateScoreboard,
   };
 })();
 
@@ -66,6 +85,7 @@ const turns = (function () {
   };
 
   const playerButtonPress = (buttonId, array, playerToken) => {
+    console.log(gameBoard.playerOne);
     const button = document.querySelector(`#${buttonId}`);
     button.textContent = playerToken;
     gameBoard.makeSelection(buttonId, array);
@@ -74,6 +94,8 @@ const turns = (function () {
   };
 
   const allSelectButtons = document.querySelectorAll(".select-button");
+
+  const winnerText = document.querySelector("#winnerText");
 
   const resetAllSelectButtons = () => {
     allSelectButtons.forEach((elem) => {
@@ -89,19 +111,21 @@ const turns = (function () {
       let buttonId = this.id;
       if (isXActive === true) {
         playerButtonPress(buttonId, gameBoard.xChoices, xToken);
-        console.log(gameBoard.xChoices);
       } else if (isXActive === false) {
         playerButtonPress(buttonId, gameBoard.oChoices, oToken);
       }
       if (checkForVictory.draw() === true) {
-        alert("done");
-        gameBoard.resetGameBoardArray();
+        winnerText.textContent = "It's a draw!";
         disableAllButtons(allSelectButtons);
       } else if (checkForVictory.xWin() === true) {
-        alert("xdone");
+        winnerText.textContent = `${gameBoard.getPlayerOne()} won the game!`;
+        gameBoard.scoreboard.push(gameBoard.getPlayerOne());
+        gameBoard.updateScoreboard();
         disableAllButtons(allSelectButtons);
       } else if (checkForVictory.oWin() === true) {
-        alert("odone");
+        winnerText.textContent = `${gameBoard.getPlayerTwo()} won the game!`;
+        gameBoard.scoreboard.push(gameBoard.getPlayerTwo());
+        gameBoard.updateScoreboard();
         disableAllButtons(allSelectButtons);
       }
     };
@@ -169,9 +193,6 @@ const resetActions = (function () {
   const resetGame = () => {
     turns.resetAllSelectButtons();
     gameBoard.resetGameBoardArray();
-    console.log(gameBoard.gameBoardArray);
-    console.log(gameBoard.xChoices);
-    console.log(gameBoard.oChoices);
   };
 
   const restartButton = document.querySelector("#restartButton");
@@ -179,12 +200,3 @@ const resetActions = (function () {
     resetGame();
   };
 })();
-
-function testReset() {
-  gameBoard.resetGameBoardArray();
-  console.log(gameBoard.gameBoardArray); // Check if the array is reset
-  console.log(xChoices);
-  console.log(oChoices);
-}
-
-// Call the test function
