@@ -85,7 +85,6 @@ const turns = (function () {
   };
 
   const playerButtonPress = (buttonId, array, playerToken) => {
-    console.log(gameBoard.playerOne);
     const button = document.querySelector(`#${buttonId}`);
     button.textContent = playerToken;
     gameBoard.makeSelection(buttonId, array);
