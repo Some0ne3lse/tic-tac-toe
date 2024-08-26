@@ -78,6 +78,23 @@ const turns = (function () {
     isXActive = true;
   };
 
+  const showCurrentStarter = () => {
+    const currentStarter = document.querySelector("#currentStarter");
+    if (isXActive === true) {
+      currentStarter.textContent = "X";
+    } else {
+      currentStarter.textContent = "O";
+    }
+  };
+
+  showCurrentStarter();
+
+  const changeCurrentStarter = document.querySelector("#changeCurrentStarter");
+  changeCurrentStarter.onclick = () => {
+    changeIsXActive();
+    showCurrentStarter();
+  };
+
   const disableAllButtons = (buttons) => {
     buttons.forEach((elem) => {
       elem.disabled = true;
@@ -107,6 +124,7 @@ const turns = (function () {
     const xToken = "X";
     const oToken = "O";
     elem.onclick = function () {
+      changeCurrentStarter.disabled = true;
       let buttonId = this.id;
       if (isXActive === true) {
         playerButtonPress(buttonId, gameBoard.xChoices, xToken);
@@ -130,7 +148,12 @@ const turns = (function () {
     };
   });
 
-  return { resetIsXActive, resetAllSelectButtons };
+  return {
+    resetIsXActive,
+    resetAllSelectButtons,
+    showCurrentStarter,
+    changeCurrentStarter,
+  };
 })();
 
 const checkForVictory = (function () {
@@ -192,6 +215,8 @@ const resetActions = (function () {
   const resetGame = () => {
     turns.resetAllSelectButtons();
     turns.resetIsXActive();
+    turns.showCurrentStarter();
+    turns.changeCurrentStarter.disabled = false;
     gameBoard.resetGameBoardArray();
   };
 
