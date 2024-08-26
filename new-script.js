@@ -192,6 +192,7 @@ const checkForVictory = (function () {
 const resetActions = (function () {
   const resetGame = () => {
     turns.resetAllSelectButtons();
+    turns.resetIsXActive();
     gameBoard.resetGameBoardArray();
   };
 
