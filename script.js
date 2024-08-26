@@ -13,7 +13,8 @@ const selectPlayer = (function () {
 })();
 
 const gameBoard = (function () {
-  let gameBoardArray = ["a1", "a2", "a3", "b1", "b2", "b3", "c1", "c2", "c3"];
+  let initialArray = ["a1", "a2", "a3", "b1", "b2", "b3", "c1", "c2", "c3"];
+  let gameBoardArray = [...initialArray];
   const checkScoreRowOne = ["a1", "a2", "a3"];
   const checkScoreRowTwo = ["b1", "b2", "b3"];
   const checkScoreRowThree = ["c1", "c2", "c3"];
@@ -69,10 +70,16 @@ const gameBoard = (function () {
     }
   };
 
-  let xAndOReset = () => {
-    oChoices.length = 0;
-    xChoices.length = 0;
-    gameBoardArray = ["a1", "a2", "a3", "b1", "b2", "b3", "c1", "c2", "c3"];
+  let draw = () => {
+    if (gameBoardArray.length === 0) {
+      return true;
+    }
+  };
+
+  let xAndOReset = (nrOne, nrTwo, array) => {
+    nrOne = 0;
+    nrTwo = 0;
+    array = [...initialArray];
   };
 
   const playerXName = document.querySelector("#playerX");
@@ -101,6 +108,7 @@ const gameBoard = (function () {
     xChoices,
     xWin,
     oWin,
+    draw,
     xAndOReset,
     makeSelection,
     playerOne,
@@ -139,12 +147,11 @@ const turns = (function () {
   for (let button in selectButtons) {
     selectButtons[button].onclick = function () {
       let buttonId = this.id;
+      console.log(gameBoard.gameBoardArray);
       if (isXActive === true) {
         buttonPress(buttonId, gameBoard.xChoices, "X");
-        console.log(gameBoard.xChoices);
       } else if (isXActive === false) {
         buttonPress(buttonId, gameBoard.oChoices, "O");
-        console.log(gameBoard.oChoices);
       }
       if (gameBoard.xWin() === true) {
         winnerText.textContent = `${gameBoard.playerOne} won the game!`;
@@ -156,9 +163,9 @@ const turns = (function () {
         gameBoard.scoreboard.push(gameBoard.playerTwo);
         gameBoard.updateScoreboard();
         disableAllButtons(selectButtons);
-      }
-      if (gameBoard.gameBoardArray.length === 0) {
+      } else if (gameBoard.draw() === true) {
         winnerText.textContent = "It's a draw!";
+        disableAllButtons(selectButtons);
       }
     };
   }
@@ -173,7 +180,11 @@ const buttonActions = (function () {
       buttonsToRestart[button].disabled = false;
     }
     turns.winnerText.textContent = "";
-    gameBoard.xAndOReset();
+    gameBoard.xAndOReset(
+      gameBoard.xChoices,
+      gameBoard.oChoices,
+      gameBoard.gameBoardArray
+    );
     turns.changeIsXActive();
   };
 
