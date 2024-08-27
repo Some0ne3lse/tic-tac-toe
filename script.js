@@ -1,91 +1,44 @@
-const selectPlayer = (function () {
-  const formItself = document.querySelector("#nameForm");
-  formItself.addEventListener("submit", (event) => {
-    event.preventDefault();
-    gameBoard.playerOne = document.querySelector("#playerOne").value;
-    gameBoard.playerTwo = document.querySelector("#playerTwo").value;
-    gameBoard.playerXName.textContent =
-      document.querySelector("#playerOne").value;
-    gameBoard.playerOName.textContent =
-      document.querySelector("#playerTwo").value;
-    formItself.reset();
-  });
-})();
-
 const gameBoard = (function () {
   let initialArray = ["a1", "a2", "a3", "b1", "b2", "b3", "c1", "c2", "c3"];
   let gameBoardArray = [...initialArray];
-  const checkScoreRowOne = ["a1", "a2", "a3"];
-  const checkScoreRowTwo = ["b1", "b2", "b3"];
-  const checkScoreRowThree = ["c1", "c2", "c3"];
-  const checkScoreColumnOne = ["a1", "b1", "c1"];
-  const checkScoreColumnTwo = ["a2", "b2", "c2"];
-  const checkScoreColumnThree = ["a3", "b3", "c3"];
-  const checkScoreAcrossOne = ["a1", "b2", "c3"];
-  const checkScoreAcrossTwo = ["c1", "b2", "a3"];
   let xChoices = [];
   let oChoices = [];
   let playerOne = "X";
   let playerTwo = "O";
   let scoreboard = [];
 
-  function makeSelection(choice, array) {
+  const playerXName = document.querySelector("#playerX");
+  const playerOName = document.querySelector("#playerO");
+  playerXName.textContent = playerOne;
+  playerOName.textContent = playerTwo;
+
+  const getPlayerOne = () => playerOne;
+  const getPlayerTwo = () => playerTwo;
+
+  const formItself = document.querySelector("#nameForm");
+  formItself.addEventListener("submit", (event) => {
+    event.preventDefault();
+    playerOne = document.querySelector("#playerOneForm").value;
+    playerTwo = document.querySelector("#playerTwoForm").value;
+    playerXName.textContent = playerOne;
+    playerOName.textContent = playerTwo;
+    formItself.reset();
+  });
+
+  const makeSelection = (choice, array) => {
     array.push(choice);
     const index = gameBoardArray.indexOf(choice);
     if (index > -1) {
       gameBoardArray.splice(index, 1);
     }
-  }
-
-  let xWin = () => {
-    if (
-      checkScoreRowOne.every((row) => xChoices.includes(row)) ||
-      checkScoreRowTwo.every((row) => xChoices.includes(row)) ||
-      checkScoreRowThree.every((row) => xChoices.includes(row)) ||
-      checkScoreColumnOne.every((row) => xChoices.includes(row)) ||
-      checkScoreColumnTwo.every((row) => xChoices.includes(row)) ||
-      checkScoreColumnThree.every((row) => xChoices.includes(row)) ||
-      checkScoreAcrossOne.every((row) => xChoices.includes(row)) ||
-      checkScoreAcrossTwo.every((row) => xChoices.includes(row))
-    ) {
-      return true;
-    } else {
-      return false;
-    }
-  };
-  let oWin = () => {
-    if (
-      checkScoreRowOne.every((row) => oChoices.includes(row)) ||
-      checkScoreRowTwo.every((row) => oChoices.includes(row)) ||
-      checkScoreRowThree.every((row) => oChoices.includes(row)) ||
-      checkScoreColumnOne.every((row) => oChoices.includes(row)) ||
-      checkScoreColumnTwo.every((row) => oChoices.includes(row)) ||
-      checkScoreColumnThree.every((row) => oChoices.includes(row)) ||
-      checkScoreAcrossOne.every((row) => oChoices.includes(row)) ||
-      checkScoreAcrossTwo.every((row) => oChoices.includes(row))
-    ) {
-      return true;
-    } else {
-      return false;
-    }
   };
 
-  let draw = () => {
-    if (gameBoardArray.length === 0) {
-      return true;
-    }
+  const resetGameBoardArray = () => {
+    gameBoardArray.length = 0;
+    xChoices.length = 0;
+    oChoices.length = 0;
+    gameBoardArray.push(...initialArray);
   };
-
-  let xAndOReset = (nrOne, nrTwo, array) => {
-    nrOne = 0;
-    nrTwo = 0;
-    array = [...initialArray];
-  };
-
-  const playerXName = document.querySelector("#playerX");
-  const playerOName = document.querySelector("#playerO");
-  playerXName.textContent = playerOne;
-  playerOName.textContent = playerTwo;
 
   const updateScoreboard = () => {
     const scoreboardDiv = document.querySelector("#scoreboard");
@@ -104,18 +57,13 @@ const gameBoard = (function () {
 
   return {
     gameBoardArray,
-    oChoices,
     xChoices,
-    xWin,
-    oWin,
-    draw,
-    xAndOReset,
-    makeSelection,
-    playerOne,
-    playerTwo,
-    playerXName,
-    playerOName,
+    oChoices,
+    getPlayerOne,
+    getPlayerTwo,
     scoreboard,
+    makeSelection,
+    resetGameBoardArray,
     updateScoreboard,
   };
 })();
@@ -123,73 +71,140 @@ const gameBoard = (function () {
 const turns = (function () {
   let isXActive = true;
   const changeIsXActive = () => {
+    isXActive = !isXActive;
+  };
+
+  const resetIsXActive = () => {
     isXActive = true;
   };
 
-  function buttonPress(buttonId, array, name) {
-    const button = document.querySelector(`#${buttonId}`);
-    button.textContent = name;
-    gameBoard.makeSelection(buttonId, array);
-    button.disabled = true;
-    isXActive = !isXActive;
-  }
+  const showCurrentStarter = () => {
+    const currentStarter = document.querySelector("#currentStarter");
+    if (isXActive === true) {
+      currentStarter.textContent = "X";
+    } else {
+      currentStarter.textContent = "O";
+    }
+  };
 
-  const winnerText = document.querySelector("#winnerText");
+  showCurrentStarter();
 
-  const selectButtons = document.querySelectorAll(".select-button");
+  const changeCurrentStarter = document.querySelector("#changeCurrentStarter");
+  changeCurrentStarter.onclick = () => {
+    changeIsXActive();
+    showCurrentStarter();
+  };
 
-  function disableAllButtons(buttons) {
+  const disableAllButtons = (buttons) => {
     buttons.forEach((elem) => {
       elem.disabled = true;
     });
-  }
+  };
 
-  for (let button in selectButtons) {
-    selectButtons[button].onclick = function () {
+  const playerButtonPress = (buttonId, array, playerToken) => {
+    const button = document.querySelector(`#${buttonId}`);
+    button.textContent = playerToken;
+    gameBoard.makeSelection(buttonId, array);
+    button.disabled = true;
+    changeIsXActive();
+  };
+
+  const allSelectButtons = document.querySelectorAll(".select-button");
+
+  const winnerText = document.querySelector("#winnerText");
+
+  const resetAllSelectButtons = () => {
+    allSelectButtons.forEach((elem) => {
+      elem.textContent = "";
+      elem.disabled = false;
+    });
+  };
+
+  allSelectButtons.forEach((elem) => {
+    const xToken = "X";
+    const oToken = "O";
+    elem.onclick = function () {
+      changeCurrentStarter.disabled = true;
       let buttonId = this.id;
-      console.log(gameBoard.gameBoardArray);
       if (isXActive === true) {
-        buttonPress(buttonId, gameBoard.xChoices, "X");
+        playerButtonPress(buttonId, gameBoard.xChoices, xToken);
       } else if (isXActive === false) {
-        buttonPress(buttonId, gameBoard.oChoices, "O");
+        playerButtonPress(buttonId, gameBoard.oChoices, oToken);
       }
-      if (gameBoard.xWin() === true) {
-        winnerText.textContent = `${gameBoard.playerOne} won the game!`;
-        gameBoard.scoreboard.push(gameBoard.playerOne);
-        gameBoard.updateScoreboard();
-        disableAllButtons(selectButtons);
-      } else if (gameBoard.oWin() === true) {
-        winnerText.textContent = `${gameBoard.playerTwo} won the game!`;
-        gameBoard.scoreboard.push(gameBoard.playerTwo);
-        gameBoard.updateScoreboard();
-        disableAllButtons(selectButtons);
-      } else if (gameBoard.draw() === true) {
+      if (checkForVictory.draw() === true) {
         winnerText.textContent = "It's a draw!";
-        disableAllButtons(selectButtons);
+        disableAllButtons(allSelectButtons);
+      } else if (checkForVictory.checkForWinner(gameBoard.xChoices) === true) {
+        winnerText.textContent = `${gameBoard.getPlayerOne()} won the game!`;
+        gameBoard.scoreboard.push(gameBoard.getPlayerOne());
+        gameBoard.updateScoreboard();
+        disableAllButtons(allSelectButtons);
+      } else if (checkForVictory.checkForWinner(gameBoard.oChoices) === true) {
+        winnerText.textContent = `${gameBoard.getPlayerTwo()} won the game!`;
+        gameBoard.scoreboard.push(gameBoard.getPlayerTwo());
+        gameBoard.updateScoreboard();
+        disableAllButtons(allSelectButtons);
       }
     };
-  }
+  });
 
-  return { selectButtons, changeIsXActive, winnerText };
+  return {
+    resetIsXActive,
+    resetAllSelectButtons,
+    showCurrentStarter,
+    changeCurrentStarter,
+  };
 })();
 
-const buttonActions = (function () {
-  const resetForm = (buttonsToRestart) => {
-    for (let button in buttonsToRestart) {
-      buttonsToRestart[button].textContent = "";
-      buttonsToRestart[button].disabled = false;
+const checkForVictory = (function () {
+  const checkScoreRowOne = ["a1", "a2", "a3"];
+  const checkScoreRowTwo = ["b1", "b2", "b3"];
+  const checkScoreRowThree = ["c1", "c2", "c3"];
+  const checkScoreColumnOne = ["a1", "b1", "c1"];
+  const checkScoreColumnTwo = ["a2", "b2", "c2"];
+  const checkScoreColumnThree = ["a3", "b3", "c3"];
+  const checkScoreAcrossOne = ["a1", "b2", "c3"];
+  const checkScoreAcrossTwo = ["c1", "b2", "a3"];
+
+  let draw = () => {
+    if (gameBoard.gameBoardArray.length === 0) {
+      return true;
+    } else {
+      return false;
     }
-    turns.winnerText.textContent = "";
-    gameBoard.xAndOReset(
-      gameBoard.xChoices,
-      gameBoard.oChoices,
-      gameBoard.gameBoardArray
-    );
-    turns.changeIsXActive();
+  };
+
+  const checkForWinner = (player) => {
+    if (
+      checkScoreRowOne.every((row) => player.includes(row)) ||
+      checkScoreRowTwo.every((row) => player.includes(row)) ||
+      checkScoreRowThree.every((row) => player.includes(row)) ||
+      checkScoreColumnOne.every((row) => player.includes(row)) ||
+      checkScoreColumnTwo.every((row) => player.includes(row)) ||
+      checkScoreColumnThree.every((row) => player.includes(row)) ||
+      checkScoreAcrossOne.every((row) => player.includes(row)) ||
+      checkScoreAcrossTwo.every((row) => player.includes(row))
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  return { draw, checkForWinner };
+})();
+
+const resetActions = (function () {
+  const resetGame = () => {
+    turns.resetAllSelectButtons();
+    turns.resetIsXActive();
+    turns.showCurrentStarter();
+    turns.changeCurrentStarter.disabled = false;
+    gameBoard.resetGameBoardArray();
   };
 
   const restartButton = document.querySelector("#restartButton");
   restartButton.onclick = function () {
-    resetForm(turns.selectButtons);
+    resetGame();
   };
 })();
