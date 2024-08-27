@@ -131,10 +131,7 @@ const turns = (function () {
       } else if (isXActive === false) {
         playerButtonPress(buttonId, gameBoard.oChoices, oToken);
       }
-      if (checkForVictory.draw() === true) {
-        winnerText.textContent = "It's a draw!";
-        disableAllButtons(allSelectButtons);
-      } else if (checkForVictory.checkForWinner(gameBoard.xChoices) === true) {
+      if (checkForVictory.checkForWinner(gameBoard.xChoices) === true) {
         winnerText.textContent = `${gameBoard.getPlayerOne()} won the game!`;
         gameBoard.scoreboard.push(gameBoard.getPlayerOne());
         gameBoard.updateScoreboard();
@@ -143,6 +140,9 @@ const turns = (function () {
         winnerText.textContent = `${gameBoard.getPlayerTwo()} won the game!`;
         gameBoard.scoreboard.push(gameBoard.getPlayerTwo());
         gameBoard.updateScoreboard();
+        disableAllButtons(allSelectButtons);
+      } else if (checkForVictory.draw() === true) {
+        winnerText.textContent = "It's a draw!";
         disableAllButtons(allSelectButtons);
       }
     };
