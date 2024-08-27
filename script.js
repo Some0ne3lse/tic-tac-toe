@@ -47,10 +47,15 @@ const gameBoard = (function () {
       scoreboardDiv.replaceChildren();
     }
 
-    for (const winner of scoreboard) {
+    const counts = {};
+    scoreboard.forEach((x) => {
+      counts[x] = (counts[x] || 0) + 1;
+    });
+
+    for (const [key, value] of Object.entries(counts)) {
       const theWinner = document.createElement("p");
       theWinner.classList.add("the-winner");
-      theWinner.textContent = winner;
+      theWinner.textContent = `${key}: ${value}`;
       scoreboardDiv.appendChild(theWinner);
     }
   };
