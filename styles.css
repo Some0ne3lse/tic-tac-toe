@@ -4,6 +4,9 @@ body {
   grid-template-columns: 1fr 3fr 1fr;
   grid-template-rows: 1fr 2fr 2fr 0.5fr;
   justify-items: center;
+  --basic-blue: rgb(61, 133, 226);
+  background-color: var(--basic-blue);
+  color: aliceblue;
 }
 
 .player-info {
@@ -21,6 +24,11 @@ body {
   flex-direction: column;
   gap: 10px;
   padding: 20px 0;
+}
+
+.name-form input {
+  height: 1.5rem;
+  border: none;
 }
 
 .change-starter {
@@ -44,6 +52,21 @@ body {
   width: 6rem;
 }
 
+.add-names-button,
+.change-starter-button {
+  height: 2rem;
+  width: 100%;
+}
+
+.restart-button,
+.add-names-button,
+.change-starter-button {
+  border-radius: 15px;
+  border: none;
+  color: var(--basic-blue);
+  align-self: center;
+}
+
 .winner-container {
   grid-column: 2 /3;
   display: flex;
@@ -59,15 +82,41 @@ body {
 
 .select-button {
   font-size: 3rem;
+  border: solid 5px var(--basic-blue);
+}
+
+.select-button#a1 {
+  border-top-left-radius: 15px;
+}
+
+.select-button#a3 {
+  border-top-right-radius: 15px;
+}
+
+.select-button#c1 {
+  border-bottom-left-radius: 15px;
+}
+
+.select-button#c3 {
+  border-bottom-right-radius: 15px;
 }
 
 .scoreboard-container {
   grid-column: 3/4;
   grid-row: 2 / 4;
   height: 90%;
+  width: 100%;
+  padding: 50px;
+  text-align: center;
 }
 
 .scoreboard {
   height: 400px;
+  width: 100%;
   overflow-y: auto;
+  background-color: aliceblue;
+  color: var(--basic-blue);
+  padding: 10px;
+  border-radius: 15px;
+  text-align: start;
 }
