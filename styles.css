@@ -3,11 +3,28 @@ body {
   display: grid;
   grid-template-columns: 1fr 3fr 1fr;
   grid-template-rows: 1fr 2fr 2fr 0.5fr;
+  justify-items: center;
 }
 
 .player-info {
   grid-column: 1 / 2;
-  grid-row: 2 / 3;
+  grid-row: 2 / 4;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 0 50px;
+}
+
+.name-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px 0;
+}
+
+.change-starter {
+  padding: 30px 0;
 }
 
 .entire-board {
@@ -25,6 +42,13 @@ body {
   grid-row: 4 / 5;
 }
 
+.winner-container {
+  grid-column: 2 /3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .winner-div {
   height: 5rem;
   font-size: 3rem;
@@ -35,7 +59,13 @@ body {
   font-size: 3rem;
 }
 
-.scoreboard-div {
+.scoreboard-container {
   grid-column: 3/4;
-  grid-row: 2 / 3;
+  grid-row: 2 / 4;
+  height: 90%;
+}
+
+.scoreboard {
+  height: 400px;
+  overflow-y: auto;
 }

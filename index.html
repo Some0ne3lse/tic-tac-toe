@@ -9,20 +9,33 @@
   </head>
   <body>
     <div class="player-info">
-      <p>Current players are:</p>
-      <p>Player X is <span id="playerX"></span></p>
-      <p>Player O is <span id="playerO"></span></p>
-      <form id="nameForm">
+      <div class="show-player-names">
+        <p>Current players are:</p>
+        <h3>
+          Player X is:
+          <p id="playerX"></p>
+        </h3>
+        <h3>
+          Player O is:
+          <p id="playerO"></p>
+        </h3>
+      </div>
+
+      <form id="nameForm" class="name-form">
         <label for="playerOneForm">Insert X player name</label>
         <input type="text" name="playerOneForm" id="playerOneForm" required />
         <label for="playerTwoForm">Insert O player name</label>
         <input type="text" name="playerTwoForm" id="playerTwoForm" required />
         <button type="submit">Add Names!</button>
       </form>
-      <div><span id="currentStarter"></span> begins the game!</div>
-      <button id="changeCurrentStarter">Change who starts</button>
+      <div class="change-starter">
+        <div><span id="currentStarter"></span> begins the game!</div>
+        <button id="changeCurrentStarter">Change who starts</button>
+      </div>
     </div>
-    <div id="winnerText" class="winner-div"></div>
+    <div class="winner-container">
+      <div id="winnerText" class="winner-div"></div>
+    </div>
 
     <div class="entire-board" id="entireBoard">
       <button id="a1" class="select-button"></button>
@@ -36,9 +49,9 @@
       <button id="c3" class="select-button"></button>
     </div>
     <button id="restartButton" class="restart-button">Restart?</button>
-    <div class="scoreboard-div">
+    <div class="scoreboard-container">
       <h2>Scoreboard:</h2>
-      <div id="scoreboard"></div>
+      <div id="scoreboard" class="scoreboard"></div>
     </div>
 
     <script src="script.js"></script>
