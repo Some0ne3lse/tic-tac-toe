@@ -40,6 +40,8 @@ body {
 .restart-button {
   grid-column: 2 / 3;
   grid-row: 4 / 5;
+  height: 3rem;
+  width: 6rem;
 }
 
 .winner-container {
